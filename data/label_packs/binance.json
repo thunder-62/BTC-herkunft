@@ -1,0 +1,11 @@
+{
+  "id": "binance",
+  "name": "Binance-Wallet",
+  "status": "Börsen-Wallet (Binance) — Absender/Empfänger; ob über Binance selbst oder einen Dienst, der über Binance auszahlt, ist daraus nicht ablesbar",
+  "note": "Public Binance hot wallet from Binance's own Proof-of-Reserves publication. Only addresses Binance published or that are publicly attributed with a citable source.",
+  "source": "Binance Proof of Reserves (https://www.binance.com/en/proof-of-reserves); attribution confirmed via Arkham Intel (https://intel.arkm.com/explorer/address/bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h)",
+  "updated": "2026-09-27",
+  "addresses": [
+    "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h"
+  ]
+}

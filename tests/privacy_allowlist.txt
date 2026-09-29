@@ -1,0 +1,24 @@
+# Erlaubte Werte für tests/test_privacy_guard.py — nur öffentliche Testvektoren
+# und erfundene Werte. Echte Adressen, xpubs oder Transaktions-IDs gehören NIE hierher.
+
+# BIP-84-Testvektor (Mnemonic „abandon … about“), erste Empfangs-/Wechseladressen
+bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu
+bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g
+# BIP-49 / BIP-44 Testvektoren
+37VucYSaXLCAsxYyAPfbSi9eh4iEcbShgf
+1LqBGSKuX5yYUonjxT5qGfpUsXKYYWeabA
+
+# Synthetisch: h = sha256("btc-origin synthetic {i}")[:20], i = 0…7 in dieser Reihenfolge;
+# „3…“ = Base58Check(0x05 + h), „bc1q…“ = Bech32 v0 (h) — nachrechenbar, keine echten Adressen
+3MJN645a8x3Fbq7MxPFoHe51djuCvijqtN
+36YG9HzwdkWf3GFfFLbqpyBxwPqkimih3b
+3PxY3oQaaxnmPhEcsCkHuCHBYzPFb5ME8k
+35L6hCgDNdWVyrF4AQqsGEKCw2Cutba3GK
+bc1qzs4lwwnll38kxtkvd8997pggr9fs78480dhhu0
+bc1q0wym7hvxuy9dvqdesczkscwy6cpv77cavyla55
+bc1q04pmdphrn2t8gtkur5rfza5l4pzh5q390pljyy
+bc1qpn7amn0egma99wz0dlje8vcvd9u9nlljz969r4
+# Platzhalter-ID (Muster) in test_export_check.py
+aa11bb22cc33dd44ee55ff6677889900aa11bb22cc33dd44ee55ff6677889900
+# BIP-84-Testvektor zpub (Mnemonic „abandon … about“, Konto 0)
+zpub6rFR7y4Q2AijBEqTUquhVz398htDFrtymD9xYYfG1m4wAcvPhXNfE3EfH1r1ADqtfSdVCToUG868RvUUkgDKf31mGDtKsAYz2oz2AGutZYs

@@ -1,0 +1,85 @@
+# Regelwerk für das Veranlagungsjahr 2025
+# Gilt ausschließlich für Vorgänge (Veräußerungen, Zuflüsse) in diesem Kalenderjahr.
+# Änderungen nur nach Prüfung der Rechtslage; "stand" dann aktualisieren.
+# 29.09.2026: kursregel.id und reform.ausblick ergänzt (Rückmeldung der steuerlichen Prüfung;
+# Ausblicktext aus dem Programm übernommen, Werte unverändert).
+
+veranlagungsjahr: 2025
+stand: 2026-09-29
+geprueft_von: "Recherche (keine Steuerberatung)"
+
+quelle:
+  bmf_schreiben:
+    datum: 2025-03-06
+    gz: "IV C 1 - S 2256/00042/064/043"
+    titel: "Einzelfragen zur ertragsteuerrechtlichen Behandlung bestimmter Kryptowerte"
+    anwendung: "alle offenen Fälle (Rz. 106)"
+  vorgaenger: "BMF-Schreiben vom 10.05.2022 (BStBl I S. 668)"
+
+paragraph_23:                      # private Veräußerungsgeschäfte
+  haltefrist_monate: 12
+  freigrenze_eur: 1000           # ab VZ 2024: 1.000 € (Wachstumschancengesetz)
+  verlustverrechnung: "nur mit Gewinnen aus § 23; Rücktrag/Vortrag nach § 23 Abs. 3 Satz 7 und 8 EStG"
+
+paragraph_22_nr_3:                 # sonstige Einkünfte aus Leistungen
+  freigrenze_eur: 256
+
+kursregel:                         # Rz. 43, 91: dieselbe Quelle für Anschaffung und Veräußerung
+  id: binance_tagesschluss_utc      # im Programm umgesetzte Regel; unbekannte Kennung → Abbruch
+  primaer: "Binance BTC/EUR Tagesschlusskurs (UTC)"
+  vor_2020_01_03: "Binance BTC/USDT Tagesschluss / EZB-Referenzkurs USD/EUR"
+  vor_2017_08_17: "mempool.space"
+  wochenende_feiertag_ezb: "letzter veröffentlichter EZB-Kurs"
+
+reform:
+  beschlossen: false               # true erst nach Verkündung im BGBl.
+  stichtag_altbestand: 2026-12-31  # nur Kennzeichnung Alt-/Neubestand, keine Berechnung
+  hinweis: "Referentenentwurf BMF (Stand September 2026), kein geltendes Recht"
+  ausblick: >-                     # Ausblick im Bericht (interne Fassung), nur Information
+    Nach dem Referentenentwurf des Bundesministeriums der Finanzen zur Besteuerung von
+    Kryptowerten (Stand September 2026; noch nicht beschlossen, kein geltendes Recht) sollen
+    Gewinne aus Kryptowerten, die nach dem 31.12.2026 angeschafft werden, als Einkünfte aus
+    Kapitalvermögen mit 25 % Abgeltungsteuer besteuert werden — unabhängig von der Haltedauer.
+    Für Kryptowerte, die bis einschließlich 31.12.2026 angeschafft wurden (Altbestand), soll
+    die bisherige Regelung mit einem Jahr Haltefrist (§ 23 Abs. 1 Satz 1 Nr. 2 EStG) weiter
+    gelten. Lassen sich Anschaffungszeitpunkt und Anschaffungskosten nicht nachweisen, soll
+    nach Berichten zum Entwurf pauschal 50 % des Veräußerungserlöses angesetzt werden.
+    Einzelheiten können sich im Gesetzgebungsverfahren noch ändern.
+
+texte:                             # Bausteine für "Rechtsgrundlagen und Quellen"
+  - id: p23_abs1
+    titel: "§ 23 Abs. 1 Satz 1 Nr. 2 EStG"
+    text: "Private Veräußerungsgeschäfte bei anderen Wirtschaftsgütern, wenn zwischen Anschaffung und Veräußerung nicht mehr als ein Jahr liegt."
+  - id: p23_abs3_s1
+    titel: "§ 23 Abs. 3 Satz 1 EStG"
+    text: "Gewinn oder Verlust ist der Unterschied zwischen Veräußerungspreis und den Anschaffungskosten und Werbungskosten."
+  - id: p23_abs3_s5
+    titel: "§ 23 Abs. 3 Satz 5 EStG"
+    text: "Gewinne bleiben steuerfrei, wenn der Gesamtgewinn aus privaten Veräußerungsgeschäften im Kalenderjahr weniger als 1000 € beträgt."
+  - id: p22_nr3
+    titel: "§ 22 Nr. 3 EStG"
+    text: "Einkünfte aus Leistungen (z. B. Prämien) sind nicht steuerpflichtig, wenn sie im Kalenderjahr weniger als 256 € betragen."
+  - id: rz_20_55
+    titel: "BMF Rz. 20, 55"
+    text: "Bei Handel über eine zentrale Handelsplattform ist der dort aufgezeichnete Handelszeitpunkt maßgebend; ohne Intermediär die Zeitpunkte aus der Wallet."
+  - id: rz_43_91
+    titel: "BMF Rz. 43, 91"
+    text: "Marktkurs einer Handelsplattform oder webbasierten Liste; ein Tageskurs wird anerkannt, wenn die Wertermittlung gleichmäßig erfolgt."
+  - id: rz_53_54
+    titel: "BMF Rz. 53, 54"
+    text: "Kryptowerte sind andere Wirtschaftsgüter; Anschaffung und Veräußerung setzen eine entgeltliche Übertragung von bzw. an Dritte voraus. Übertragungen zwischen eigenen Wallets sind keine Veräußerung."
+  - id: rz_56
+    titel: "BMF Rz. 56"
+    text: "Beim UTXO-Modell führt Wechselgeld an den eigenen Schlüssel die ursprünglichen Anschaffungsdaten fort."
+  - id: rz_57_59
+    titel: "BMF Rz. 57, 59"
+    text: "Transaktionsgebühren im Zusammenhang mit der Veräußerung sind Werbungskosten; sie sind auf steuerbare und nicht steuerbare Geschäfte aufzuteilen."
+  - id: rz_61_62
+    titel: "BMF Rz. 61, 62"
+    text: "Grundsatz der Einzelbetrachtung; nur wenn sie nicht möglich ist FiFo. Walletbezogene Betrachtung, Methode innerhalb einer Wallet beibehalten."
+  - id: rz_63
+    titel: "BMF Rz. 63"
+    text: "Bei Currency Token (Bitcoin) keine Verlängerung der Veräußerungsfrist auf zehn Jahre."
+  - id: rz_87_101_104
+    titel: "BMF Rz. 87, 101–104"
+    text: "Der öffentliche Schlüssel dient der Prüfung von Angaben. Jedes Veräußerungsgeschäft soll einzeln nachvollziehbar sein; die Finanzbehörde kann Belege anfordern."

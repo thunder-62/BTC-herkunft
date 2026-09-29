@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment / secrets (never commit)
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Local data (session artifacts) — public label packs ARE tracked
+data/*
+!data/label_packs/
+!data/label_packs/**
+*.log
+
+# Personal local files read by the app (names, exchange exports) — NEVER commit.
+local/*
+!local/README.md

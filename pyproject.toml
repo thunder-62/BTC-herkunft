@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "btc-origin"
+version = "0.1.0"
+description = "Lokales Open-Source-Tool zur Herkunftsnachweis- und Haltefrist-Analyse öffentlicher Bitcoin-Wallet-Daten (xpubs/Adressen)."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+  { name = "BTC-Herkunft contributors" },
+]
+keywords = ["bitcoin", "xpub", "electrum", "herkunft", "haltefrist", "local-first"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Framework :: FastAPI",
+  "Topic :: Office/Business :: Financial",
+  "Intended Audience :: End Users/Desktop",
+]
+dependencies = [
+  "fastapi>=0.110.0",
+  "uvicorn[standard]>=0.27.0",
+  "pydantic>=2.0.0",
+  "pydantic-settings>=2.0.0",
+  "httpx>=0.27.0",
+  "embit>=0.8.0",
+  "fpdf2>=2.7.0",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "httpx>=0.27.0",
+  "ruff>=0.5,<0.16",
+]
+
+[project.scripts]
+btc-origin = "btc_origin.api.app:run"
+btc-origin-pp-diff = "btc_origin.pp_diff:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+# Feste Regelauswahl, damit lokale und CI-Version dasselbe prüfen
+select = ["E4", "E7", "E9", "F"]
+

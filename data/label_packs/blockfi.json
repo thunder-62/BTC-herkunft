@@ -1,0 +1,12 @@
+{
+  "id": "blockfi",
+  "name": "BlockFi",
+  "status": "Kaufnachweis fehlt, Quelle nicht erreichbar",
+  "note": "Modest cited set from community on-chain analysis during the court-supervised BlockFi Wallet withdrawal window (Aug\u2013Dec 2023): 3QSP\u2026 is the 2-of-3 multisig hot wallet that paid out customer BTC withdrawals; bc1q7xa6\u2026 replenished it. Timing matches the Nov 2022 platform pause and later withdrawal restart. Exchange-side withdrawal / custody cluster only \u2014 not user receive destinations. Expand from Arkham BlockFi entity pages and Kroll dockets when additional full BTC strings are published.",
+  "source": "https://www.reddit.com/r/blockfi/comments/16ggcug/btc_wallet_withdrawal_volume_analysis_56_btc_sent/ ; https://www.reddit.com/r/blockfi/comments/16j7ll8/analysis_of_blockfi_btc_wallet_withdrawals_being/ (addresses 3QSPK5fyNPwPtvh8s7YAGPHFeiTRJnJMD8 and bc1q7xa6hs9v83876qt6vwk8ycpzqs2yayv3utvctz); https://cases.ra.kroll.com/BlockFiDistributions/ (wallet withdrawal period context)",
+  "updated": "2026-09-27",
+  "addresses": [
+    "3QSPK5fyNPwPtvh8s7YAGPHFeiTRJnJMD8",
+    "bc1q7xa6hs9v83876qt6vwk8ycpzqs2yayv3utvctz"
+  ]
+}

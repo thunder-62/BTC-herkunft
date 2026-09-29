@@ -1,0 +1,9 @@
+{
+  "id": "voyager",
+  "name": "Voyager",
+  "status": "Kaufnachweis fehlt, Quelle nicht erreichbar",
+  "note": "No reconstructable native-BTC address strings found after thorough search of primary/reputable public sources. Voyager used omnibus custody (Bedrock / third-party custodians); SDNY filings describe the model but do not spell full BTC addresses. Arkham entity pages and CoinDesk/Blockworks liquidation coverage discuss ETH/altcoin flows and do not publish fully spelled BTC strings. Keeping addresses empty rather than inventing. Re-check: Stretto Voyager dockets, Arkham Voyager entity, and any future PoR/forensics that spell full 1\u2026/3\u2026/bc1\u2026 strings.",
+  "source": "Checked (no full BTC strings): https://cases.stretto.com/public/x193/11753/PLEADINGS/1175307062280000000036.pdf ; https://www.govinfo.gov/content/pkg/USCOURTS-nysb-1_22-bk-10943/pdf/USCOURTS-nysb-1_22-bk-10943-1.pdf ; https://www.coindesk.com/markets/2023/02/28/crypto-broker-voyager-digital-sends-121m-in-crypto-to-exchanges-sells-ether-shiba-inu-holdings ; https://intel.arkm.com/explorer/entity/voyager-digital (Cloudflare-blocked / no public BTC list); https://blockworks.co/news/voyager-crypto-liquidation-almost-complete (fetch blocked); https://dfr.vermont.gov/consumer-alert/voyager-digital-files-chapter-11-bankruptcy",
+  "updated": "2026-09-27",
+  "addresses": []
+}

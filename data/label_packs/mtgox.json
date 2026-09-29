@@ -1,0 +1,22 @@
+{
+  "id": "mtgox",
+  "name": "Mt.Gox",
+  "status": "Kaufnachweis fehlt, Quelle nicht erreichbar",
+  "note": "Addresses from the publicly documented June 2011 proof-of-solvency consolidation (Block 132749 / 424242.42424242 BTC) plus the March 2011 hot-wallet keypool tip identified by WizSec. Does NOT include thief destinations (e.g. 1Feex…). Expand from WizSec research, trustee disclosures, and WalletExplorer historical MtGox.com clusters — cite every address.",
+  "source": "https://en.bitcoin.it/wiki/MtGox (Block 132749 proof-of-solvency); tx 3a1b9e330d32fef1ee42f8e86420d2be978bbe0dc5862f17da9027cf9e11f8c4; https://blog.wizsec.jp/2020/06/mtgox-march-2011-theft.html (1GPuT4JD1yKTEGnw2csTCqSAtS3DRiTD69)",
+  "updated": "2026-09-27",
+  "addresses": [
+    "1eHhgW6vquBYhwMPhQ668HPjxTtpvZGPC",
+    "1Hzpk4eXTbrAfmH2noWrkrgxo6ewH6qncd",
+    "17dxcM1cdeXPL1rZNJDAFwU2C4H9Xf5VqR",
+    "19H4PcfyPCw8FUh5J1pma5Bb9w2srhYcQ4",
+    "1LfddcwiNnJ7Hk3KpBv5AfcTMD1fCahLqY",
+    "15oGga9EJ7BzdZxFnEcDxQDZvh1dHZ6Zco",
+    "1FfsbQntU2BAkVy2xaaRpSmLEDMEUwPbG1",
+    "1MtyGxTeWmjNhXyBf85JPKL5vrhTRJ7HnD",
+    "14yX4kRDME61BbM7DMnuv1PKUtk8K65J4y",
+    "191sZm1o7WZ1baNqUmRow6RPo293gbeJLW",
+    "1Q4EpJ6eaXDV1mEHx7JgupBuGNi4GBcMbV",
+    "1GPuT4JD1yKTEGnw2csTCqSAtS3DRiTD69"
+  ]
+}

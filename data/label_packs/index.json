@@ -1,0 +1,48 @@
+{
+  "schema": "btc-origin.label_pack.v1",
+  "description": "Public exchange/insolvency address packs shipped with BTC-Herkunft. User xpubs, tx history, and personal labels must NEVER be written here.",
+  "packs": [
+    {
+      "id": "ftx",
+      "file": "ftx.json",
+      "name": "FTX",
+      "address_count": 53,
+      "updated": "2026-09-27"
+    },
+    {
+      "id": "mtgox",
+      "file": "mtgox.json",
+      "name": "Mt.Gox",
+      "address_count": 12,
+      "updated": "2026-09-27"
+    },
+    {
+      "id": "celsius",
+      "file": "celsius.json",
+      "name": "Celsius",
+      "address_count": 15,
+      "updated": "2026-09-27"
+    },
+    {
+      "id": "blockfi",
+      "file": "blockfi.json",
+      "name": "BlockFi",
+      "address_count": 2,
+      "updated": "2026-09-27"
+    },
+    {
+      "id": "voyager",
+      "file": "voyager.json",
+      "name": "Voyager",
+      "address_count": 0,
+      "updated": "2026-09-27"
+    },
+    {
+      "id": "binance",
+      "file": "binance.json",
+      "name": "Binance-Wallet",
+      "address_count": 1,
+      "updated": "2026-09-27"
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+# Kategorien für Zuflüsse und Export-Zeilen (jahresunabhängig).
+# Was hier nicht zugeordnet ist, gilt als "nicht unterstützt": kein Wert,
+# Ausweis unter "Offene Punkte", Prüfprotokoll endet mit Fehler.
+
+# 29.09.2026 (Rückmeldung der steuerlichen Prüfung): anzeigename je Kategorie (Report und
+# Geltungsbereich zeigen nur diesen Namen), Kategorien defi, betriebsvermoegen,
+# andere_kryptowerte ergänzt.
+kategorien:
+  kauf:
+    anzeigename: "Kauf gegen Euro oder Fremdwährung"
+    behandlung: anschaffung
+    beschreibung: "Kauf gegen Euro oder Fremdwährung"
+  empfehlung:
+    anzeigename: "Empfehlungsprämie"
+    behandlung: einkunft_22_3
+    anschaffung_zum_tageskurs: true
+    beschreibung: "Empfehlungsprämie (Entgelt für eine Leistung)"
+  cashback:
+    anzeigename: "Cashback"
+    behandlung: einkunft_22_3        # vorsichtige Variante; alternativ Minderung der AK
+    anschaffung_zum_tageskurs: true
+    beschreibung: "Cashback/Reward auf Käufe"
+  mining:
+    anzeigename: "Mining"
+    behandlung: nicht_unterstuetzt
+    beschreibung: "Block- oder Pool-Reward – Steuerberater einbeziehen"
+  staking:
+    anzeigename: "Staking"
+    behandlung: nicht_unterstuetzt
+  lending:
+    anzeigename: "Lending"
+    behandlung: nicht_unterstuetzt
+  airdrop:
+    anzeigename: "Airdrops"
+    behandlung: nicht_unterstuetzt
+  fork:
+    anzeigename: "Forks"
+    behandlung: nicht_unterstuetzt
+  tausch_krypto:
+    anzeigename: "Tausch gegen andere Kryptowerte"
+    behandlung: nicht_unterstuetzt
+    beschreibung: "Tausch gegen einen anderen Kryptowert (eigene Veräußerung)"
+  andere_kryptowerte:
+    anzeigename: "andere Kryptowerte"
+    behandlung: nicht_unterstuetzt
+  defi:
+    anzeigename: "DeFi"
+    behandlung: nicht_unterstuetzt
+  schenkung_erbschaft:
+    anzeigename: "Schenkung und Erbschaft"
+    behandlung: nicht_unterstuetzt
+  betriebsvermoegen:
+    anzeigename: "Betriebsvermögen"
+    behandlung: nicht_unterstuetzt
+  lightning_zahlung:
+    anzeigename: "Zahlungen und Routing im Lightning-Netzwerk"
+    behandlung: nicht_unterstuetzt
+
+# Export-Art (Spalte laut CSV) -> Kategorie bzw. technische Art, je Börse.
+# Kauf/Verkauf/Auszahlung/Einzahlung sind technische Arten des Parsers,
+# keine steuerlichen Kategorien. Unbekannte Arten -> nicht unterstützt.
+zuordnung_export:
+  relai:
+    spalte_art: "Transaction Type"
+    arten:
+      "Buy": kauf
+    anschaffungskosten: '"Fiat Amount (excl. fees)" + "Fee"'   # beide EUR
+    hinweis: "Export enthält nur Käufe; Rewards erscheinen nicht und werden manuell zugeordnet."
+  # Die folgenden Arten stammen aus dem bestehenden Parser und seinen Tests (Nachbildungen
+  # der Exportformate). Weitere Arten ordnet der Nutzer in der Oberfläche zu (Übersicht der
+  # Export-Arten) und speichert sie in local/kategorien.yaml. Wo die Art-Spalte die Richtung
+  # nicht festlegt, hängt der Parser seine Lesart an („trade – Kauf“).
+  21bitcoin:
+    spalte_art: "transaction_type"
+    arten:
+      "trade – Kauf": kauf
+      "trade – Verkauf": verkauf
+      "withdrawal": auszahlung
+      "deposit": einzahlung
+  binance:
+    spalte_art: "Operation (Transaktionshistorie) bzw. Side (Order-Historie)"
+    arten:
+      "Transaction Buy": kauf
+      "Buy Crypto With Card": kauf
+      "Transaction Sold": verkauf
+      "Withdraw": auszahlung
+      "Deposit": einzahlung
+      "Simple Earn Flexible Interest": lending
+      "BUY": kauf
+      "SELL": verkauf
+      "BUY (BTC als Gegenwert)": tausch_krypto
+      "SELL (BTC als Gegenwert)": tausch_krypto
+  bison:
+    spalte_art: "Transaction type"
+    arten:
+      "Buy": kauf
+      "Withdraw": auszahlung
+      "Deposit": einzahlung
+  bitgo:
+    spalte_art: "TX_TYPE"
+    arten:
+      "Deposit – Kauf über Settlement-Konto": kauf
+      "Withdrawal – Verkauf über Settlement-Konto": verkauf
+      "Withdrawal": auszahlung
+      "Deposit": einzahlung
+  bitvavo:
+    spalte_art: "Type"
+    arten:
+      "buy": kauf
+      "sell": verkauf
+      "withdrawal": auszahlung
+      "deposit": einzahlung
+  coinbase:
+    spalte_art: "Transaction Type"
+    arten:
+      "Buy": kauf
+      "Advanced Trade Sell": verkauf
+      "Send": auszahlung
+      "Receive": einzahlung
+      "Convert": tausch_krypto
+  strike:
+    spalte_art: "TransactionType"
+    arten:
+      "Purchase": kauf
+      "Send": auszahlung
+      "Withdrawal": auszahlung
+
+# Einzelne Zuflüsse per T-Nummer (wo der Export nichts hergibt) — persönliche Daten,
+# daher NICHT hier, sondern in local/kategorien.yaml (nicht im Git), z. B.:
+#   zuordnung_manuell:
+#     T-123:
+#       kategorie: empfehlung
+#       datum: 2025-03-01
+#       erlaeuterung: "Empfehlungsprämie; nicht im Export enthalten"
+zuordnung_manuell: {}
+
+# Geltungsbereich-Text im Report wird aus dieser Datei erzeugt:
+# unterstützt  = Kategorien mit behandlung anschaffung / einkunft_22_3 + Umbuchungen
+# nicht unterstützt = alle Kategorien mit behandlung nicht_unterstuetzt

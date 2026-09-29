@@ -1,0 +1,25 @@
+{
+  "id": "celsius",
+  "name": "Celsius",
+  "status": "Kaufnachweis fehlt, Quelle nicht erreichbar",
+  "note": "Modest cited set: (1) Celsius-controlled BTC donation wallets published by @CelsiusNetwork / @Mashinsky and reported by CoinDesk; (2) OXT.me entity CELSIUS NETWORK labels for internal/reserve and user-withdrawal processing wallets as documented in a June 2022 public listing of OXT URLs. Exchange-side / custody / withdrawal-cluster only \u2014 not thief sinks. Expand further from Stretto dockets and Arkham entity pages when full BTC strings are published.",
+  "source": "https://www.coindesk.com/business/2022/10/25/celsius-once-solicited-donations-for-ukraine-heres-what-happened-next (quotes Celsius BTC 1GT9VpbZP4CB5MdvTBYEHJ4mm56GNPUCZv and bc1q49aukmruj3edwtktsdgtkqgu87j9gsvaw5k2xc); https://pastebin.com/F3vp0TgT (OXT.me CELSIUS NETWORK entity address list, Jun 2022); https://oxt.me/entity/CELSIUS%20NETWORK",
+  "updated": "2026-09-27",
+  "addresses": [
+    "1GT9VpbZP4CB5MdvTBYEHJ4mm56GNPUCZv",
+    "bc1q35g04slz3d6ute64wggduef0f7gtdqqpaeledu",
+    "bc1q49aukmruj3edwtktsdgtkqgu87j9gsvaw5k2xc",
+    "bc1q4gwx0f6yqurq0gwj9ktwlevrp3eu8snn5kaaax",
+    "bc1q5yw4me8t3adc7582wakmx0kslsq7g566aqx6tt",
+    "bc1qa56lzf7d05ttur003zmuzwrgl3x0qau5zm2qzn",
+    "bc1qe7anrjqgch9mgf6qarxt052lyvnx26a069uyhz",
+    "bc1qfpv7fjkkag4e85kwuc4d6ghpu5fsesyn2363kv",
+    "bc1qhq058j0r6y3c9rk93jykgrnmdn8klgqdh2dtz7",
+    "bc1qll5425jh4jqlgkzjcyzpprapx2vhzt2s29p7lx",
+    "bc1qpetcgh0upxengx3aqlpewrlx0xm0f6ya3htcjn",
+    "bc1qq9tk3uhcx58y5qvmzs50nhs49m0pdkmrfpkzs4",
+    "bc1qrnn4wfhgz2e0etek66sh3n9l6k99alxk044mhr",
+    "bc1qyemk24czaa6a2nr89nrz775ewvptxg7yfe750u",
+    "bc1qzdmkuwnekznt5jy4xdfk6jyswh2gr2hlm79ldq"
+  ]
+}
