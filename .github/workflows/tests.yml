@@ -10,15 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Datenschutz-Prüfung jedes Commits, nicht nur des Endstands
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - run: sudo apt-get install -y fonts-dejavu-core
       - run: pip install -e ".[dev]" pymupdf
       - name: Lint (ruff)
-        run: ruff check src tests
+        run: ruff check src tests scripts
       - name: Datenschutz-Prüfung
         run: pytest -q tests/test_privacy_guard.py
+      - name: Datenschutz-Prüfung aller Commits
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python scripts/privacy_scan.py "origin/${{ github.base_ref }}..HEAD"
+          else
+            python scripts/privacy_scan.py --all
+          fi
       - name: Alle Tests
         run: pytest -q
 

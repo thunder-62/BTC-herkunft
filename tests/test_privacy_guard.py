@@ -6,19 +6,30 @@ und schlägt fehl bei
   den öffentlichen Label-Packs (`data/label_packs/`) stehen,
 - gültigen xpub/ypub/zpub/tpub … außer denen in der Erlaubt-Liste,
 - 64-stelligen Hex-Werten (Transaktions-IDs) außer der Erlaubt-Liste,
-- „krummen“ Beträgen (mehr als 4 signifikante Stellen, z. B. 0.07318264 oder
-  5_283_917) — erfundene Werte sind rund oder offensichtliche Muster (0.12345678),
+- „krummen“ Beträgen (mehr als 4 signifikante Stellen) — erfundene Werte sind rund
+  oder offensichtliche Muster (0.12345678),
 - Uhrzeiten mit Sekunden ungleich :00 (echte Export-Zeitstempel),
 - persönlichen Namen (nur als Hash hinterlegt).
 
 Eine Zeile mit dem Vermerk `privacy: ok` wird übersprungen — nur für Werte, die
 nachweislich öffentlich oder erfunden sind (z. B. Gesetzes- oder Kursgrenzen).
+
+Zusätzlich:
+- Diese Datei prüft sich selbst; Negativbeispiele entstehen erst zur Laufzeit.
+- Jeder Eintrag der Erlaubt-Liste muss nachrechenbar sein (BIP-Testvektoren aus der
+  öffentlichen Mnemonic „abandon … about“, synthetische Adressen aus
+  sha256("btc-origin synthetic {i}"), Muster-Platzhalter).
+- Liegen echte Daten in `local/` (nur auf dem Rechner des Nutzers, nicht im Git), wird
+  das Repository gegen genau diese Werte geprüft — auch „runde“ Werte, ohne Ausnahmen.
+- `scripts/privacy_scan.py` wendet dieselben Regeln auf jeden Commit an (CI, vor jeder
+  öffentlichen Synchronisierung: `--all`).
 Regeln für Testdaten: siehe CLAUDE.md.
 """
 
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -35,7 +46,7 @@ STRICT_HEX_PREFIXES = ("btc-regeln/", "docs/")
 
 # Öffentliche Label-Packs und generierte Dateien werden nicht durchsucht.
 SKIP_PREFIXES = ("data/label_packs/",)
-SKIP_NAMES = {"package-lock.json", "test_privacy_guard.py"}  # hier: Negativbeispiele
+SKIP_NAMES = {"package-lock.json"}  # diese Datei prüft sich selbst mit
 TEXT_SUFFIXES = {
     ".py", ".md", ".txt", ".csv", ".json", ".toml", ".cfg", ".ini", ".yml", ".yaml",
     ".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".bat", ".ps1", ".sh", ".example", "",
@@ -192,10 +203,20 @@ def test_guard_rejects_hashes_in_rules_and_docs_even_if_marked() -> None:
     assert not _findings(ROOT / "docs" / "x.md", "  " + "c" * 64 + "\n", allowed=set())  # Platzhalter
 
 
+def _sample_bad_values() -> tuple[str, str, str]:
+    """Negativbeispiele, erst zur Laufzeit gebildet (stehen so nicht in dieser Datei):
+    krummer Betrag, krumme Satoshi-Zahl, Zeitstempel mit Sekunden — alle erfunden."""
+    amount = "0." + "".join(str((3 * i + 7) % 10) for i in range(8))
+    sats = "_".join(["5", "283", "917"])
+    stamp = "2024-02-29 " + ":".join(["13", "37", "42"])
+    return amount, sats, stamp
+
+
 def test_guard_catches_real_looking_values(tmp_path: Path) -> None:
+    amount, sats, stamp = _sample_bad_values()
     sample = (
         'addr = "3MJN645a8x3Fbq7MxPFoHe51djuCvijqtN"\n'
-        'wd = ("0.07318264", 5_283_917, "2024-02-29 13:37:42")\n'
+        f'wd = ("{amount}", {sats}, "{stamp}")\n'
         'ok = ("0.01000000", 250_000, 0.12345678, "10:05:00", "bc1qownaddress")\n'
     )
     p = ROOT / "tests" / "_sample.py"
@@ -203,4 +224,148 @@ def test_guard_catches_real_looking_values(tmp_path: Path) -> None:
     kinds = sorted(f.split(": ", 1)[1].split(" ")[0] for f in found)
     assert kinds == ["Bitcoin-Adresse", "Zeitstempel", "krummer", "krummer"]
     assert all(":3:" not in f for f in found)
-    assert _findings(p, sample, allowed={"3MJN645a8x3Fbq7MxPFoHe51djuCvijqtN"})[0].endswith("0.07318264")
+    assert _findings(p, sample, allowed={"3MJN645a8x3Fbq7MxPFoHe51djuCvijqtN"})[0].endswith(amount)
+
+
+def test_guard_checks_itself() -> None:
+    """Keine Selbstausnahme: diese Datei wird wie jede andere geprüft."""
+    assert Path(__file__).resolve() in {p.resolve() for p in _files()}
+
+
+# ---------------------------------------------------------------- Erlaubt-Liste nachrechnen
+
+SYNTHETIC_COUNT = 64  # sha256("btc-origin synthetic {i}") für i < 64
+_MNEMONIC = " ".join(["abandon"] * 11 + ["about"])  # öffentliche BIP-39-Test-Mnemonic
+
+
+def _verifiable_values() -> set[str]:
+    """Alles, was in der Erlaubt-Liste stehen darf: BIP-44/49/84-Testvektoren (Adressen der ersten
+    Empfangs- und Wechseladressen, Konto-xpub/ypub/zpub) und synthetische Adressen."""
+    from embit import base58, bech32, bip32, bip39
+    from embit.networks import NETWORKS
+    from embit.script import p2pkh, p2sh, p2wpkh
+
+    net = NETWORKS["main"]
+    root = bip32.HDKey.from_seed(bip39.mnemonic_to_seed(_MNEMONIC))
+    out: set[str] = set()
+    for purpose, script, version in ((44, p2pkh, "xpub"), (49, lambda k: p2sh(p2wpkh(k)), "ypub"),
+                                     (84, p2wpkh, "zpub")):
+        account = root.derive(f"m/{purpose}h/0h/0h")
+        out.add(account.to_public().to_string(version=net[version]))
+        for change in (0, 1):
+            for i in range(5):
+                out.add(script(account.derive(f"m/{change}/{i}").key).address(net))
+    for i in range(SYNTHETIC_COUNT):
+        h = hashlib.sha256(f"btc-origin synthetic {i}".encode()).digest()[:20]
+        out.add(base58.encode_check(b"\x05" + h))
+        out.add(bech32.encode("bc", 0, h))
+    return out
+
+
+def _is_pattern_placeholder(value: str) -> bool:
+    """Offensichtlicher Platzhalter: höchstens zwei Zeichen oder ein wiederholter Block."""
+    v = value.lower()
+    return len(set(v)) <= 2 or any(len(v) % n == 0 and v == v[:n] * (len(v) // n) for n in (1, 2, 4, 8, 16, 32))
+
+
+def test_allowlist_entries_are_verifiable() -> None:
+    """Die Erlaubt-Liste kann keine echten Werte „freischalten“: jeder Eintrag wird nachgerechnet."""
+    pytest.importorskip("embit")
+    ok = _verifiable_values()
+    bad = []
+    for line in ALLOWLIST.read_text(encoding="utf-8").splitlines():
+        value = line.split("#", 1)[0].strip()
+        if value and value not in ok and not _is_pattern_placeholder(value):
+            bad.append(value[:8] + "…")
+    assert not bad, ("Nicht nachrechenbare Einträge in tests/privacy_allowlist.txt (nur BIP-Testvektoren, "
+                     "synthetische Adressen oder Muster-Platzhalter): " + ", ".join(bad))
+
+
+# ---------------------------------------------------------------- Abgleich mit echten Daten (lokal)
+
+RE_DATETIME = re.compile(r"\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}")
+RE_AMOUNT = re.compile(r"(?<![\w.])\d{1,7}[.,]\d{2,8}(?![\d])")  # auch nach CSV-Komma
+
+
+def _local_dir() -> Path:
+    env = os.environ.get("BTC_ORIGIN_LOCAL_DIR", "").strip()
+    return Path(env).expanduser() if env else ROOT / "local"
+
+
+def real_values(local: Path | None = None) -> set[str]:
+    """Echte Werte aus ``local/`` (nur im Arbeitsspeicher): Adressen, Transaktions-Hashes,
+    Zeitstempel mit Sekunden und Beträge mit mehr als 4 signifikanten Stellen — jeweils auch
+    in den Schreibweisen, in denen sie im Code stehen könnten (Komma, Satoshi mit „_“)."""
+    base = local or _local_dir()
+    out: set[str] = set()
+    if not base.is_dir():
+        return out
+    for p in base.rglob("*"):
+        if not p.is_file() or p.name == "README.md" or p.stat().st_size > 20_000_000:
+            continue
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        out.update(m.group() for m in RE_BECH32.finditer(text) if _bech32_ok(m.group()))
+        out.update(m.group() for m in RE_BASE58_ADDR.finditer(text) if _b58check(m.group()) is not None)
+        out.update(m.group().lower() for m in RE_HEX64.finditer(text) if not _is_pattern_placeholder(m.group()))
+        for m in RE_DATETIME.finditer(text):
+            if not m.group().endswith(":00"):
+                out.update({m.group(), m.group().replace("T", " ")})
+        for m in RE_AMOUNT.finditer(text):
+            whole, frac = re.split(r"[.,]", m.group())
+            if len(_significant(whole.lstrip("0") + frac)) <= 4:
+                continue
+            dot = f"{whole}.{frac}"
+            out.update({dot, dot.replace(".", ",")})
+            if len(frac) == 8:  # BTC → Satoshi
+                sats = int(whole) * 100_000_000 + int(frac)
+                out.update({str(sats), f"{sats:_}"})
+    return out
+
+
+def _real_value_hits(files: list[Path], values: set[str]) -> list[str]:
+    if not values:
+        return []
+    pattern = re.compile("|".join(re.escape(v) for v in sorted(values, key=len, reverse=True)))
+    hits = []
+    for path in files:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for n, line in enumerate(text.splitlines(), 1):
+            # Hashes auch in Großschreibung erkennen
+            found = {m.group() for m in pattern.finditer(line)} | {m.group() for m in pattern.finditer(line.lower())}
+            hits += [f"{path.relative_to(ROOT).as_posix()}:{n}: echter Wert aus local/ ({v[:4]}…)" for v in sorted(found)]
+    return hits
+
+
+def test_no_real_values_from_local_in_repo() -> None:
+    """Nur auf dem Rechner des Nutzers wirksam (``local/`` mit echten Daten): keines der echten
+    Merkmale darf irgendwo im Repository stehen — ohne Erlaubt-Liste und ohne „privacy: ok“."""
+    values = real_values()
+    if not values:
+        pytest.skip("keine echten Daten in local/ (z. B. in der CI)")
+    hits = _real_value_hits(_files(), values)
+    assert not hits, "Echte Werte aus local/ im Repository:\n  " + "\n  ".join(hits)
+
+
+def test_real_values_are_detected(tmp_path: Path) -> None:
+    amount, _sats, stamp = _sample_bad_values()
+    local = tmp_path / "local"
+    (local / "boersen").mkdir(parents=True)
+    tx = hashlib.sha256(b"btc-origin synthetic local").hexdigest()
+    (local / "boersen" / "x.csv").write_text(f"{stamp},Buy,{amount}\n{tx}\n", encoding="utf-8")
+    values = real_values(local)
+    sats = int(amount.replace(".", ""))
+    assert {amount, amount.replace(".", ","), stamp, tx, f"{sats:_}"} <= values
+    probe = tmp_path / "probe.py"
+    probe.write_text(f"X = {sats:_}  # privacy: ok\n", encoding="utf-8")
+    global ROOT
+    old, ROOT = ROOT, tmp_path
+    try:
+        assert _real_value_hits([probe], values)  # auch mit „privacy: ok“
+    finally:
+        ROOT = old

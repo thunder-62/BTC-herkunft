@@ -1,0 +1,9 @@
+# Geprüfte Werte aus älteren Commits (scripts/privacy_scan.py): erfunden oder abgeleitet, damals
+# noch ohne „privacy: ok“. Nur Beträge und Zeitstempel — nie Adressen, xpubs oder Hashes.
+0.07318264   # privacy: ok — erfundenes Negativbeispiel im Privacy-Guard
+5_283_917    # privacy: ok — erfundenes Negativbeispiel im Privacy-Guard
+13:37:42     # privacy: ok — erfundenes Negativbeispiel im Privacy-Guard
+22:13:20     # privacy: ok — Unix-Zeit 1_700_000_000 = 2023-11-14 22:13:20 UTC
+86_399_999   # privacy: ok — 24 h in Millisekunden minus 1
+10_001       # privacy: ok — Grenzwert 10_000 + 1
+2_992_500    # privacy: ok — abgeleitet: 3 Mio. − 0,25 %

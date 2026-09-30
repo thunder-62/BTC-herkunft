@@ -35,8 +35,9 @@ BTC-Herkunft verarbeitet Steuer- und Vermögensdaten. Das Repository ist
 gültige Adressen/xpubs außerhalb der Erlaubt-Liste, 64-stellige Hex-Werte, krumme
 Beträge, Uhrzeiten mit Sekunden und persönliche Namen. Bei einem Treffer den Wert
 durch einen erfundenen ersetzen — nur nachweislich öffentliche oder abgeleitete
-Werte in die Erlaubt-Liste eintragen oder die Zeile mit `privacy: ok` und
-Begründung markieren.
+Werte mit `privacy: ok` und Begründung markieren. Die Erlaubt-Liste wird
+nachgerechnet (BIP-Testvektoren, synthetische Adressen, Muster-Platzhalter);
+`scripts/privacy_scan.py` prüft in der CI zusätzlich jeden Commit des PR.
 
 ## Lokal starten
 
@@ -54,8 +55,9 @@ cd frontend && npm install && cd ..
 Dasselbe läuft in der CI (`.github/workflows/tests.yml`):
 
 ```bash
-ruff check src tests               # Lint
+ruff check src tests scripts       # Lint
 pytest -q                          # alle Tests inkl. Datenschutz-Prüfung
+python scripts/privacy_scan.py origin/main..HEAD   # Datenschutz: jeder Commit des Branches
 cd frontend && npx tsc --noEmit    # Typecheck der Oberfläche
 ```
 
